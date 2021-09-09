@@ -320,7 +320,7 @@ protected:
                         int even_vblock_shift, int odd_vblock_shift) const = 0;
 
   static const int tile_width_ = 8;
-  static const int tile_height_ = 4;
+  static const int tile_height_ = 5; //PV changed this because the old panel is actually 5 high NOT 4
   static const int even_vblock_offset_ = 0;
   static const int odd_vblock_offset_ = 8;
 };
@@ -439,21 +439,6 @@ protected:
   }
 };
 
-class P10Outdoor32x16HalfScanMapper : public MultiplexMapperBase {
-public:
-  P10Outdoor32x16HalfScanMapper() : MultiplexMapperBase("P10Outdoor32x16HalfScan", 4) {}
-
-  void MapSinglePanel(int x, int y, int *matrix_x, int *matrix_y) const {
-    int base = (x/8)*32;
-    bool reverse = (y%4)/2 == 0;
-    int offset = (3-((y%8)/2))*8;
-    int dx = x%8;
-
-    *matrix_y = (y/8 == 0) ? ((y%2 == 0) ? 0:1) : ((y%2 == 0) ? 2:3);
-    *matrix_x = base + (reverse ? offset + (7-dx) : offset + dx);
-  }
-};
-
 /*
  * Here is where the registration happens.
  * If you add an instance of the mapper here, it will automatically be
@@ -463,24 +448,23 @@ static MuxMapperList *CreateMultiplexMapperList() {
   MuxMapperList *result = new MuxMapperList();
 
   // Here, register all multiplex mappers from above.
-  result->push_back(new StripeMultiplexMapper());
-  result->push_back(new CheckeredMultiplexMapper());
-  result->push_back(new SpiralMultiplexMapper());
-  result->push_back(new ZStripeMultiplexMapper("ZStripe", 0, 8));
-  result->push_back(new ZStripeMultiplexMapper("ZnMirrorZStripe", 4, 4));
-  result->push_back(new CoremanMapper());
-  result->push_back(new Kaler2ScanMapper());
-  result->push_back(new ZStripeMultiplexMapper("ZStripeUneven", 8, 0));
-  result->push_back(new P10MapperZ());
-  result->push_back(new QiangLiQ8());
-  result->push_back(new InversedZStripe());
-  result->push_back(new P10Outdoor1R1G1BMultiplexMapper1());
-  result->push_back(new P10Outdoor1R1G1BMultiplexMapper2());
-  result->push_back(new P10Outdoor1R1G1BMultiplexMapper3());
-  result->push_back(new P10CoremanMapper());
-  result->push_back(new P8Outdoor1R1G1BMultiplexMapper());
-  result->push_back(new FlippedStripeMultiplexMapper());
-  result->push_back(new P10Outdoor32x16HalfScanMapper());
+  result->push_back(new StripeMultiplexMapper());                           //1
+  result->push_back(new CheckeredMultiplexMapper());                        //2
+  result->push_back(new SpiralMultiplexMapper());                           //3
+  result->push_back(new ZStripeMultiplexMapper("ZStripe", 0, 8));           //4
+  result->push_back(new ZStripeMultiplexMapper("ZnMirrorZStripe", 4, 4));   //5
+  result->push_back(new CoremanMapper());                                   //6
+  result->push_back(new Kaler2ScanMapper());                                //7
+  result->push_back(new ZStripeMultiplexMapper("ZStripeUneven", 8, 0));     //8
+  result->push_back(new P10MapperZ());                                      //9
+  result->push_back(new QiangLiQ8());                                       //10
+  result->push_back(new InversedZStripe());                                 //11
+  result->push_back(new P10Outdoor1R1G1BMultiplexMapper1());                //12
+  result->push_back(new P10Outdoor1R1G1BMultiplexMapper2());                //13
+  result->push_back(new P10Outdoor1R1G1BMultiplexMapper3());                //14
+  result->push_back(new P10CoremanMapper());                                //15
+  result->push_back(new P8Outdoor1R1G1BMultiplexMapper());                  //16
+  result->push_back(new FlippedStripeMultiplexMapper());                    //17
   return result;
 }
 

@@ -48,19 +48,28 @@ static bool FullSaturation(const Color &c) {
 int main(int argc, char *argv[]) {
   RGBMatrix::Options matrix_options;
   rgb_matrix::RuntimeOptions runtime_opt;
+  runtime_opt.gpio_slowdown = 3;
+  matrix_options.hardware_mapping = "regular";  // or e.g. "adafruit-hat"
+  matrix_options.rows = 20;
+  matrix_options.cols = 40;
+  matrix_options.chain_length = 2;
+  matrix_options.parallel = 1;
+  matrix_options.multiplexing=13;
+  matrix_options.pwm_bits=5;
+  matrix_options.pixel_mapper_config="V-mapper:Rotate:180"; 
   if (!rgb_matrix::ParseOptionsFromFlags(&argc, &argv,
                                          &matrix_options, &runtime_opt)) {
     return usage(argv[0]);
   }
 
-  Color color(255, 255, 0);
+  Color color(0, 255, 0);
   Color bg_color(0, 0, 0);
   Color flood_color(0, 0, 0);
   Color outline_color(0,0,0);
   bool with_outline = false;
 
-  const char *bdf_font_file = NULL;
-  int x_orig = 0;
+  const char *bdf_font_file = "/home/pi/PiMatrixController/matrix/fonts/Test8-30.bdf";
+  int x_orig = 5;
   int y_orig = 0;
   int letter_spacing = 0;
 
